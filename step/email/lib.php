@@ -172,9 +172,14 @@ class email extends libbase {
         $patterns[] = '##courses##';
         $courses = $mailentries;
         $coursesstring = '';
+        if ($this->parse_course(array_pop($courses)->courseid) != '') {
+            $coursesstring .= "\n" . $this->parse_course(array_pop($courses)->courseid);
+        }
         $coursesstring .= $this->parse_course(array_pop($courses)->courseid);
         foreach ($courses as $entry) {
-            $coursesstring .= "\n" . $this->parse_course($entry->courseid);
+            if ($this->parse_course($entry->courseid) != '') {
+                $coursesstring .= "\n" . $this->parse_course($entry->courseid);
+            }
         }
         $replacements[] = $coursesstring;
 
@@ -183,7 +188,9 @@ class email extends libbase {
         $courses = $mailentries;
         $coursestabledata = array();
         foreach ($courses as $entry) {
-            $coursestabledata[$entry->courseid] = $this->parse_course_row_data($entry->courseid);
+            if ($this->parse_course_row_data($entry->courseid) != '') {
+                $coursestabledata[$entry->courseid] = $this->parse_course_row_data($entry->courseid);
+            }
         }
         $coursestable = new \html_table();
         $coursestable->data = $coursestabledata;
@@ -199,7 +206,12 @@ class email extends libbase {
      * @throws \dml_exception
      */
     private function parse_course($courseid) {
-        $course = get_course($courseid);
+        try {
+            $course = get_course($courseid);
+        } catch (\dml_missing_record_exception $e) {
+            // Course no longer exists!
+            return '';
+        }
         $result = $course->fullname;
         return $result;
     }
@@ -211,7 +223,12 @@ class email extends libbase {
      * @throws \dml_exception
      */
     private function parse_course_row_data($courseid) {
-        $course = get_course($courseid);
+        try {
+            $course = get_course($courseid);
+        } catch (\dml_missing_record_exception $e) {
+            // Course no longer exists!
+            return '';
+        }
         return array($course->fullname);
     }
 
