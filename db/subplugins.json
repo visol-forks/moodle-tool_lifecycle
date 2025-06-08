@@ -1,10 +1,6 @@
 {
-  "subplugintypes": {
-    "lifecycletrigger": "trigger",
-    "lifecyclestep": "step"
-  },
   "plugintypes" : {
-    "lifecycletrigger" : "admin/tool/lifecycle/trigger",
-    "lifecyclestep" : "admin/tool/lifecycle/step"
+    "lifecycletrigger" : "admin\/tool\/lifecycle\/trigger",
+    "lifecyclestep" : "admin\/tool\/lifecycle\/step"
   }
 }
